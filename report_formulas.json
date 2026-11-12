@@ -1,0 +1,308 @@
+{
+  "CARA PAKAI": {
+    "headers": [
+      "PC CONTENT NOVEMBER 2026",
+      "Alur satu arah"
+    ],
+    "formulas": [
+      [
+        13,
+        1,
+        "=COUNTS!X6"
+      ],
+      [
+        14,
+        1,
+        "=COUNTS!X4"
+      ],
+      [
+        15,
+        1,
+        "=COUNTS!X5"
+      ],
+      [
+        16,
+        1,
+        "=COUNTS!X9"
+      ],
+      [
+        17,
+        1,
+        "=COUNTS!X10"
+      ],
+      [
+        19,
+        1,
+        "=COUNTS!X11"
+      ],
+      [
+        20,
+        1,
+        "=COUNTS!X12"
+      ]
+    ]
+  },
+  "COUNTS": {
+    "headers": [
+      "Key",
+      "Brand",
+      "Username",
+      "LS W1",
+      "LS W2",
+      "LS W3",
+      "LS W4",
+      "LS W5",
+      "LS W6",
+      "SV W1",
+      "SV W2",
+      "SV W3",
+      "SV W4",
+      "SV W5",
+      "SV W6",
+      "SV Mandatory",
+      "SV Kompetisi",
+      "SV Event",
+      "Total LS",
+      "Total SV",
+      "Total Content",
+      "",
+      "Parameter",
+      "Nilai"
+    ],
+    "formulas": [
+      [
+        2,
+        0,
+        "=LET(combined,VSTACK('RINGKAS SV'!A2:INDEX('RINGKAS SV'!A:A,'RINGKAS SV'!$N$2),'RINGKAS LS'!A2:INDEX('RINGKAS LS'!A:A,'RINGKAS LS'!$N$2)),keys,IFNA(SORT(UNIQUE(FILTER(combined,combined<>\"\"))),\"\"),IF(INDEX(keys,1,1)=\"\",MAKEARRAY(1,21,LAMBDA(rr,cc,\"\")),LET(sv,ARRAYFORMULA(IFNA(VLOOKUP(keys,'RINGKAS SV'!A2:INDEX('RINGKAS SV'!L:L,'RINGKAS SV'!$N$2),{4,5,6,7,8,9,10,11,12},FALSE),0)),ls,ARRAYFORMULA(IFNA(VLOOKUP(keys,'RINGKAS LS'!A2:INDEX('RINGKAS LS'!I:I,'RINGKAS LS'!$N$2),{4,5,6,7,8,9},FALSE),0)),lsTotal,BYROW(ls,LAMBDA(one,SUM(one))),svTotal,BYROW(CHOOSECOLS(sv,1,2,3,4,5,6),LAMBDA(one,SUM(one))),HSTACK(keys,ARRAYFORMULA(REGEXEXTRACT(keys,\"^([^♦]+)♦(.*)$\")),ls,sv,lsTotal,svTotal,ARRAYFORMULA(lsTotal+svTotal)))))"
+      ],
+      [
+        2,
+        23,
+        "=IF(ISERROR(A2),A2,MAX(2,COUNTIF(A2:A20000,\"?*\")+1))"
+      ],
+      [
+        3,
+        23,
+        "=IF(ISERROR(A2),A2,COUNTIF(A2:A20000,\"?*\"))"
+      ],
+      [
+        4,
+        23,
+        "=SUM(T2:T20000)"
+      ],
+      [
+        5,
+        23,
+        "=SUM(S2:S20000)"
+      ],
+      [
+        6,
+        23,
+        "=IF(ISERROR(A2),\"ERROR PERHITUNGAN\",IF(X3=0,\"BELUM ADA CONTENT NOVEMBER\",\"HASIL TERSEDIA\"))"
+      ],
+      [
+        7,
+        23,
+        "=COUNTIF('RAW SV'!H2:H,\"<>\")"
+      ],
+      [
+        8,
+        23,
+        "=COUNTIF('RAW LS'!D2:D,\"<>\")"
+      ],
+      [
+        9,
+        23,
+        "=COUNTIFS('CALC SV'!B2:INDEX('CALC SV'!B:B,'CALC SV'!F2),\"?*\",'CALC SV'!C2:INDEX('CALC SV'!C:C,'CALC SV'!F2),0)+COUNTIFS('CALC LS'!B2:INDEX('CALC LS'!B:B,'CALC LS'!F2),\"?*\",'CALC LS'!C2:INDEX('CALC LS'!C:C,'CALC LS'!F2),0)"
+      ],
+      [
+        10,
+        23,
+        "=IF(OR(X3>=19000,X7>=190000,X8>=95000),\"PERLU TAMBAH KAPASITAS\",\"DALAM KAPASITAS\")"
+      ],
+      [
+        11,
+        23,
+        "=X7-X4"
+      ],
+      [
+        12,
+        23,
+        "=X8-X5"
+      ]
+    ]
+  },
+  "CONFIG": {
+    "headers": [
+      "Week",
+      "Start Date",
+      "End Date",
+      "Days",
+      "Share"
+    ],
+    "formulas": []
+  },
+  "CALC SV": {
+    "headers": [
+      "Brand",
+      "Username",
+      "Tanggal",
+      "Week",
+      "Kategori",
+      "Baris akhir data"
+    ],
+    "formulas": [
+      [
+        2,
+        0,
+        "=IFNA(LET(raw,FILTER({'RAW SV'!K2:K,'RAW SV'!H2:H,'RAW SV'!B2:B,'RAW SV'!E2:E,'RAW SV'!U2:U},'RAW SV'!H2:H<>\"\"),parse,LAMBDA(v,ARRAYFORMULA(IF(ISNUMBER(v),INT(v),IFERROR(IF(REGEXMATCH(TO_TEXT(v),\"^\\d{4}-\\d{2}-\\d{2}\"),DATE(VALUE(LEFT(v,4)),VALUE(MID(v,6,2)),VALUE(MID(v,9,2))),IF(REGEXMATCH(TO_TEXT(v),\"^\\d{1,2}/\\d{1,2}/\\d{4}\"),DATE(VALUE(REGEXEXTRACT(TO_TEXT(v),\"\\d{4}\")),VALUE(REGEXEXTRACT(TO_TEXT(v),\"^\\d{1,2}/(\\d{1,2})\")),VALUE(REGEXEXTRACT(TO_TEXT(v),\"^\\d{1,2}\"))),DATEVALUE(v))),0)))),brands,ARRAYFORMULA(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(UPPER(TRIM(CHOOSECOLS(raw,1))),\"CLOSEUP\",\"CLOSE UP\"),\"DOVESCL\",\"DOVE SCL\"),\"DOVEDEO\",\"DOVE DEO\")),users,ARRAYFORMULA(LOWER(REGEXREPLACE(TRIM(CHOOSECOLS(raw,2)),\"^@\",\"\"))),dates,parse(CHOOSECOLS(raw,3)),weeks,ARRAYFORMULA(IF((dates>=CONFIG!$B$2)*(dates<=CONFIG!$C$7),1+(dates>CONFIG!$C$2)+(dates>CONFIG!$C$3)+(dates>CONFIG!$C$4)+(dates>CONFIG!$C$5)+(dates>CONFIG!$C$6),0)),labels,ARRAYFORMULA(LOWER(IF(CHOOSECOLS(raw,5)<>\"\",CHOOSECOLS(raw,5),CHOOSECOLS(raw,4)))),types,ARRAYFORMULA(IF(REGEXMATCH(labels,\"kompetisi|competition\"),\"Kompetisi\",IF(REGEXMATCH(labels,\"event|gathering\"),\"Event\",\"Mandatory\"))),FILTER(HSTACK(brands,users,dates,weeks,types),users<>\"\")),{\"\",\"\",\"\",\"\",\"\"})"
+      ],
+      [
+        2,
+        5,
+        "=IF(ISERROR(A2),A2,MAX(2,COUNTIF(B2:B200001,\"?*\")+1))"
+      ]
+    ]
+  },
+  "CALC LS": {
+    "headers": [
+      "Brand",
+      "Username",
+      "Tanggal",
+      "Week",
+      "",
+      "Baris akhir data"
+    ],
+    "formulas": [
+      [
+        2,
+        0,
+        "=IFNA(LET(raw,FILTER({'RAW LS'!H2:H,'RAW LS'!D2:D,'RAW LS'!B2:B},'RAW LS'!D2:D<>\"\"),parse,LAMBDA(v,ARRAYFORMULA(IF(ISNUMBER(v),INT(v),IFERROR(IF(REGEXMATCH(TO_TEXT(v),\"^\\d{4}-\\d{2}-\\d{2}\"),DATE(VALUE(LEFT(v,4)),VALUE(MID(v,6,2)),VALUE(MID(v,9,2))),IF(REGEXMATCH(TO_TEXT(v),\"^\\d{1,2}/\\d{1,2}/\\d{4}\"),DATE(VALUE(REGEXEXTRACT(TO_TEXT(v),\"\\d{4}\")),VALUE(REGEXEXTRACT(TO_TEXT(v),\"^\\d{1,2}/(\\d{1,2})\")),VALUE(REGEXEXTRACT(TO_TEXT(v),\"^\\d{1,2}\"))),DATEVALUE(v))),0)))),brands,ARRAYFORMULA(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(UPPER(TRIM(CHOOSECOLS(raw,1))),\"CLOSEUP\",\"CLOSE UP\"),\"DOVESCL\",\"DOVE SCL\"),\"DOVEDEO\",\"DOVE DEO\")),users,ARRAYFORMULA(LOWER(REGEXREPLACE(TRIM(CHOOSECOLS(raw,2)),\"^@\",\"\"))),dates,parse(CHOOSECOLS(raw,3)),weeks,ARRAYFORMULA(IF((dates>=CONFIG!$B$2)*(dates<=CONFIG!$C$7),1+(dates>CONFIG!$C$2)+(dates>CONFIG!$C$3)+(dates>CONFIG!$C$4)+(dates>CONFIG!$C$5)+(dates>CONFIG!$C$6),0)),FILTER(HSTACK(brands,users,dates,weeks),users<>\"\")),{\"\",\"\",\"\",\"\"})"
+      ],
+      [
+        2,
+        5,
+        "=IF(ISERROR(A2),A2,MAX(2,COUNTIF(B2:B100001,\"?*\")+1))"
+      ]
+    ]
+  },
+  "RINGKAS SV": {
+    "headers": [
+      "Key",
+      "Brand",
+      "Username",
+      "SV W1",
+      "SV W2",
+      "SV W3",
+      "SV W4",
+      "SV W5",
+      "SV W6",
+      "Mandatory",
+      "Kompetisi",
+      "Event",
+      "",
+      "Baris akhir"
+    ],
+    "formulas": [
+      [
+        2,
+        0,
+        "=ARRAYFORMULA(IF(B2:B20000=\"\",\"\",B2:B20000&\"♦\"&C2:C20000))"
+      ],
+      [
+        2,
+        1,
+        "=IFNA(LET(data,FILTER('CALC SV'!A2:INDEX('CALC SV'!E:E,'CALC SV'!$F$2),'CALC SV'!D2:INDEX('CALC SV'!D:D,'CALC SV'!$F$2)>0,ARRAYFORMULA(REGEXMATCH('CALC SV'!A2:INDEX('CALC SV'!A:A,'CALC SV'!$F$2),\"^(PEPSODENT|CLOSE UP|LIFEBUOY|DOVE SCL|LUX|REXONA|DOVE DEO)$\"))),QUERY(HSTACK(CHOOSECOLS(data,1,2),ARRAYFORMULA(--(CHOOSECOLS(data,4)=1)),ARRAYFORMULA(--(CHOOSECOLS(data,4)=2)),ARRAYFORMULA(--(CHOOSECOLS(data,4)=3)),ARRAYFORMULA(--(CHOOSECOLS(data,4)=4)),ARRAYFORMULA(--(CHOOSECOLS(data,4)=5)),ARRAYFORMULA(--(CHOOSECOLS(data,4)=6)),ARRAYFORMULA(--(CHOOSECOLS(data,5)=\"Mandatory\")),ARRAYFORMULA(--(CHOOSECOLS(data,5)=\"Kompetisi\")),ARRAYFORMULA(--(CHOOSECOLS(data,5)=\"Event\"))),\"select Col1,Col2,sum(Col3),sum(Col4),sum(Col5),sum(Col6),sum(Col7),sum(Col8),sum(Col9),sum(Col10),sum(Col11) where Col1 is not null and Col2 is not null group by Col1,Col2 order by Col1,Col2 label sum(Col3) '',sum(Col4) '',sum(Col5) '',sum(Col6) '',sum(Col7) '',sum(Col8) '',sum(Col9) '',sum(Col10) '',sum(Col11) ''\",0)),{\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"})"
+      ],
+      [
+        2,
+        13,
+        "=IF(ISERROR(B2),B2,MAX(2,COUNTIF(B2:B20000,\"?*\")+1))"
+      ]
+    ]
+  },
+  "RINGKAS LS": {
+    "headers": [
+      "Key",
+      "Brand",
+      "Username",
+      "LS W1",
+      "LS W2",
+      "LS W3",
+      "LS W4",
+      "LS W5",
+      "LS W6",
+      "",
+      "",
+      "",
+      "",
+      "Baris akhir"
+    ],
+    "formulas": [
+      [
+        2,
+        0,
+        "=ARRAYFORMULA(IF(B2:B20000=\"\",\"\",B2:B20000&\"♦\"&C2:C20000))"
+      ],
+      [
+        2,
+        1,
+        "=IFNA(LET(data,FILTER('CALC LS'!A2:INDEX('CALC LS'!D:D,'CALC LS'!$F$2),'CALC LS'!D2:INDEX('CALC LS'!D:D,'CALC LS'!$F$2)>0,ARRAYFORMULA(REGEXMATCH('CALC LS'!A2:INDEX('CALC LS'!A:A,'CALC LS'!$F$2),\"^(PEPSODENT|CLOSE UP|LIFEBUOY|DOVE SCL|LUX|REXONA|DOVE DEO)$\"))),QUERY(HSTACK(CHOOSECOLS(data,1,2),ARRAYFORMULA(--(CHOOSECOLS(data,4)=1)),ARRAYFORMULA(--(CHOOSECOLS(data,4)=2)),ARRAYFORMULA(--(CHOOSECOLS(data,4)=3)),ARRAYFORMULA(--(CHOOSECOLS(data,4)=4)),ARRAYFORMULA(--(CHOOSECOLS(data,4)=5)),ARRAYFORMULA(--(CHOOSECOLS(data,4)=6))),\"select Col1,Col2,sum(Col3),sum(Col4),sum(Col5),sum(Col6),sum(Col7),sum(Col8) where Col1 is not null and Col2 is not null group by Col1,Col2 order by Col1,Col2 label sum(Col3) '',sum(Col4) '',sum(Col5) '',sum(Col6) '',sum(Col7) '',sum(Col8) ''\",0)),{\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"})"
+      ],
+      [
+        2,
+        13,
+        "=IF(ISERROR(B2),B2,MAX(2,COUNTIF(B2:B20000,\"?*\")+1))"
+      ]
+    ]
+  },
+  "RAW LS": {
+    "headers": [
+      "Source",
+      "Live Date",
+      "Date",
+      "Creator name",
+      "Creator follower count",
+      "Product ID",
+      "Product name",
+      "Brand",
+      "Livestream name",
+      "Livestream room ID",
+      "Live Start",
+      "Live End",
+      "Creator LIVE-attributed GMV",
+      "Creator-attributed items sold",
+      "Creator LIVE-attributed orders",
+      "Duration",
+      "LIVE views",
+      "LIVE likes"
+    ],
+    "formulas": []
+  },
+  "RAW SV": {
+    "headers": [
+      "Source",
+      "Post date",
+      "Date",
+      "Video title",
+      "Type Content",
+      "Video ID",
+      "Video link",
+      "Creator name",
+      "Product ID",
+      "Product name",
+      "Brand",
+      "Creator video-attributed GMV",
+      "Video-attributed orders",
+      "Video-attributed items sold",
+      "Likes",
+      "Comments",
+      "Shares",
+      "Video product impressions",
+      "Video product clicks",
+      "Video views",
+      "Type Video"
+    ],
+    "formulas": []
+  }
+}
